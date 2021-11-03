@@ -1,4 +1,4 @@
-# Multipurpose-Calculator-Project
+# Multipurpose Calculator And Convertor
 COAL Semester Project: Multipurpose Calculator and Convertor
 This is a menu driven application where the user can choose from a variety of options
 and perform the calculations or conversions they want to.
