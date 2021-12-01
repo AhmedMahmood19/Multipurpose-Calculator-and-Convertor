@@ -21,6 +21,9 @@ Features included would be:
 
 ● Temperature Convertor: Provides multiple options for conversion between units
   of temperature eg: Celsius to Fahrenheit , Fahrenheit to Celsius etc
+  
+● Quadratic Equation Calculator: User can enter a,b,c for the equation
+  ax^2 + bx + c = 0 and find the roots of the quadratic equation
 
 Note : More features or options may be added during the development process of the
 project.
