@@ -13,6 +13,7 @@ DivNum PROTO,
 
 
 
+
 .data
 										;MAIN MENU VARIABLES
 MenuMsg BYTE "Select an option:",0Ah,0
@@ -168,21 +169,7 @@ BasicCalc PROC
 							
 							;then jump to the appropriate option and calculate the results
 
-	call clrscr
-	mov dx,010Fh
-	call GotoXY
-	mov edx,OFFSET BCInputPrompt
-	call writestring
-
-	mov dx,020Fh
-	call GotoXY
-	call readint	;read num1
-	mov num1,eax
-
-	mov dx,030Fh
-	call GotoXY
-	call readint	;read num2
-	mov num2,eax
+	
 
 	call clrscr
 	mov dx,030Fh
@@ -205,11 +192,29 @@ BasicCalc PROC
 	mov edx,OFFSET BCOp4
 	call writestring
 
-	
-
 	mov dx,080Fh
 	call GotoXY
-	call readint		
+	call readint	
+	push eax
+					;input numbers
+	call clrscr
+	mov dx,010Fh
+	call GotoXY
+	mov edx,OFFSET BCInputPrompt
+	call writestring
+
+	mov dx,020Fh
+	call GotoXY
+	call readint	;read num1
+	mov num1,eax
+
+	mov dx,030Fh
+	call GotoXY
+	call readint	;read num2
+	mov num2,eax
+
+	pop eax
+
 	CMP eax,1
 	je Addition
 	CMP eax,2
