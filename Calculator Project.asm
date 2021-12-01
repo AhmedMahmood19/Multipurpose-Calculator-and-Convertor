@@ -11,6 +11,9 @@ SubNum PROTO,
 DivNum PROTO,
 	val1:sdword, val2:sdword
 
+MulNum PROTO,
+	val1:sdword, val2:sdword
+
 
 
 
@@ -23,29 +26,10 @@ Op3 BYTE "3.Exponent Calculator",0Ah,0
 Op4 BYTE "4.Unit Convertor",0Ah,0
 Op5 BYTE "5.Quadratic Equation Calculator",0Ah,0
 OpDef BYTE "Invalid Input!",0Ah,0		;Default case for incorrect input
-;-------------------------------------------------------------------------
-
-										;BASIC CALC MENU VARIABLES
-BCInputPrompt BYTE "Enter two numbers",0Ah,0
-num1 SDWORD ?
-num2 SDWORD ?										
-BCalcMenuMsg BYTE "Select an option:",0Ah,0
-BCOp1 BYTE "1.Addition",0Ah,0
-BCOp2 BYTE "2.Subtraction",0Ah,0
-BCOp3 BYTE "3.Multiplication",0Ah,0
-BCOp4 BYTE "4.Division",0Ah,0
-BCOpDef BYTE "Invalid Input!",0Ah,0		;Default case for incorrect input
-
-										;ADDITION VARIABLES
-AddHeader BYTE "--- ADDITION ---",0Ah,0
-AddEquation BYTE "A + B = ",0
-num1Msg BYTE "First Number = ",0
-num2Msg BYTE "Second Number = ",0
-
-
-
 
 ;-------------------------------------------------------------------------
+
+
 .code
 main PROC
 	call MainMenu
@@ -155,6 +139,10 @@ GPACalc ENDP
 
 ;-----------------------------------------------------------------------
 BasicCalc PROC
+LOCAL num1:sdword,num2:sdword
+
+
+
 ;	Let user select from addition, subtraction, multiplication and division
 ;	Jump to chosen options and ask for 2 inputs
 ;	Then Calculate and Display the Result
@@ -174,34 +162,31 @@ BasicCalc PROC
 	call clrscr
 	mov dx,030Fh
 	call GotoXY
-	mov edx,OFFSET BCOp1
-	call writestring
+	mWriteln "1.Addition"	
+
 	
 	mov dx,040Fh
 	call GotoXY
-	mov edx,OFFSET BCOp2
-	call writestring
+	mWriteln "2.Subtraction"	
 	
 	mov dx,050Fh
 	call GotoXY
-	mov edx,OFFSET BCOp3
-	call writestring
+	mWriteln "3.Multiplication"	
 
 	mov dx,060Fh
 	call GotoXY
-	mov edx,OFFSET BCOp4
-	call writestring
+	mWriteln "4.Division"	
 
 	mov dx,080Fh
 	call GotoXY
 	call readint	
-	push eax
+	push eax		;storying user's choice as we have to use eax to store numbers
+
 					;input numbers
 	call clrscr
 	mov dx,010Fh
 	call GotoXY
-	mov edx,OFFSET BCInputPrompt
-	call writestring
+	mWriteln "Enter two numbers: "
 
 	mov dx,020Fh
 	call GotoXY
@@ -226,7 +211,7 @@ BasicCalc PROC
 
 
 	Addition:
-	INVOKE AddNum, num1,num2
+	INVOKE AddNum, num1,num2		;function call
 	ret
 
 	Subtraction:
@@ -234,6 +219,9 @@ BasicCalc PROC
 	ret
 
 	Multiplication:
+	INVOKE MulNum, num1, num2
+	ret
+
 	Division:
 	INVOKE DivNum, num1,num2
 							
@@ -254,30 +242,26 @@ AddNum PROC,
 	call clrscr
 	mov dx,010Fh
 	call GotoXY
-	mov edx,OFFSET AddHeader
-	call writestring
+	mWrite "--- Addition ---"
 
 	mov dx,020Fh
 	call GotoXY
-	mov edx,OFFSET num1Msg
-	call writestring
+	mWrite "First Number = "
 	mov eax,val1
 	call writeint
 	call crlf
 
 	mov dx,030Fh
 	call GotoXY
-	mov edx,OFFSET num2Msg
-	call writestring
+	mWrite "Second Number = "
 	mov eax,val2
 	call writeint
 	call crlf
 
 	mov dx,040Fh
 	call GotoXY
-	mov edx,OFFSET AddEquation
-	call writestring
-
+	mWrite "A + B = "
+						;calculation
 	mov eax,val1
 	add eax,val2
 	call writeint
@@ -319,7 +303,7 @@ SubNum PROC,
 	mov dx,040Fh
 	call GotoXY
 	mWrite "A - B = "
-
+						;calculation
 	mov eax,val1
 	sub eax,val2
 	call writeint
@@ -360,17 +344,20 @@ DivNum PROC,
 	mov dx,040Fh
 	call GotoXY
 	mWrite "A / B = "
-
+						;calculation from here onwards
 	mov eax,val1
 	cdq
 	mov ebx,val2
-	mov edx,0			;setting it to 0 because it will hold the remainder and if there is no remainder there shouldnt be any garbage value in it
+	mov edx,0			;initialising
 	idiv ebx
+	push edx		;saving edx value
 	call writeint
+
 	mWriteLn " "		;new line
 	mov dx,050Fh
 	call GotoXY
 	mWrite "Remainder = "
+	pop edx
 	mov eax,edx			;edx saves the remainder so moving that into eax so that we can output it
 	call writeint
 
@@ -378,6 +365,55 @@ DivNum PROC,
 		ret
 
 DivNum ENDP
+
+;-----------------------------------------------------------------------
+MulNum PROC,
+	val1:sdword,val2:sdword
+;	Function to divide two variables
+;	Receives: 2 values va1 and val2
+;	Returns: answer to their division
+;-----------------------------------------------------------------------
+
+							;Apply the formula on the inputs
+
+							;Display the result at the end
+	call clrscr			
+					;msgs displayed
+	mov dx,010Fh
+	call GotoXY
+	mWrite "--- Multiplication ---"
+	mov dx,020Fh
+	call GotoXY
+	mWrite "First Number= "
+	mov eax,val1
+	call writeint
+	call crlf
+
+	mov dx,030Fh
+	call GotoXY
+	mWrite "Second Number = "
+	mov eax,val2
+	call writeint
+	call crlf
+
+	mov dx,040Fh
+	call GotoXY
+	mWrite "A * B = "
+				
+				;actual calculation from here onwards
+
+	mov ax, sword ptr val1
+	mov bx,sword ptr val2
+	imul bx
+	shl edx,16
+	or eax,edx
+	call writeint
+	
+
+
+		ret
+
+MulNum ENDP
 
 ;-----------------------------------------------------------------------
 ExpCalc PROC
