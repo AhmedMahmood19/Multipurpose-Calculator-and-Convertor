@@ -422,7 +422,44 @@ ExpCalc PROC
 ;	Receives: NONE
 ;	Returns: NONE
 ;-----------------------------------------------------------------------
+	LOCAL exp:BYTE,base:WORD
+	call clrscr
+	mov eax,0
+	mov ebx,0
+	mov ecx,0
+	mov edx,0
+jmp input
 
+invalidinput:
+	mWriteln "Input was Invalid!"
+	call crlf
+input:
+	mWrite "Enter a 16 bit base: "
+	call readdec
+	cmp ax,0
+je  invalidinput
+	mov base,ax
+
+	mWrite "Enter a 8 bit exponent: "
+	call readdec
+	cmp al,0
+je  invalidinput
+	mov exp,al
+	
+	movzx ecx,exp	;if exp is 3 multiplies by itself 3 times
+	mov eax,1		;initially eax is 1 so after 1 loop(exp=1), it becomes base
+	movzx ebx,base	;base will multiply by itself
+Lexp:
+		mul ebx
+LOOP Lexp
+	cmp edx,0
+jnz	outofrange
+	mWrite "Result is: "
+	call writedec
+jmp endexp
+outofrange:
+	mWrite "ERROR: Result is greater than 32 bits and cannot be displayed"
+endexp:
 	ret
 ExpCalc ENDP
 
@@ -434,7 +471,49 @@ ConvertorMenu PROC
 ;	Receives: NONE
 ;	Returns: NONE
 ;-----------------------------------------------------------------------
+	
+	call clrscr
+	mov dx,010Fh
+	call GotoXY
+	mWriteln "Choose An Option:"
 
+	mov dx,030Fh
+	call GotoXY
+	mWriteln "1.Length Convertor"
+	
+	mov dx,040Fh
+	call GotoXY
+	mWriteln "2.Mass Convertor"
+	
+	mov dx,050Fh
+	call GotoXY
+	mWriteln "3.Temperature Convertor"
+
+	mov dx,060Fh
+	call GotoXY
+	call readint
+	
+	CMP eax,1
+	je LLength
+	CMP eax,2
+	je Mass
+	CMP eax,3
+	je Temperature
+	jne defaultconv
+	
+	LLength:
+		;TODO LENGTH unit func where option will be picked and result shown in same fuc
+		ret
+
+	Mass:
+		ret
+	
+	Temperature:
+		ret
+
+	defaultconv:
+		mWriteln "Invalid Input!"
+		call waitmsg
 	ret
 ConvertorMenu ENDP
 
