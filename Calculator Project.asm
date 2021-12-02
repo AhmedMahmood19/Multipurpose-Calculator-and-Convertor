@@ -209,21 +209,130 @@ LOCAL num1:sdword,num2:sdword
 	CMP eax,4
 	je Division
 
-
+	;--------------Addition---------------
 	Addition:
-	INVOKE AddNum, num1,num2		;function call
+	INVOKE AddNum, num1,num2	;function call
+	push eax
+	call clrscr
+	mov dx,010Fh
+	call GotoXY
+	mWrite "--- Addition ---"
+
+	mov dx,020Fh
+	call GotoXY
+	mWrite "First Number = "
+	mov eax,num1
+	call writeint
+	call crlf
+
+	mov dx,030Fh
+	call GotoXY
+	mWrite "Second Number = "
+	mov eax,num2
+	call writeint
+	call crlf
+
+	mov dx,040Fh
+	call GotoXY
+	mWrite "A + B = " 
+	pop eax
+	call writeint
 	ret
 
+	;------------Subtraction------------
 	Subtraction:
 	INVOKE SubNum, num1,num2
+	push eax
+	call clrscr
+	mov dx,010Fh
+	call GotoXY
+	mWrite "--- Subtraction ---"
+	mov dx,020Fh
+	call GotoXY
+	mWrite "First Number= "
+	mov eax,num1
+	call writeint
+	call crlf
+
+	mov dx,030Fh
+	call GotoXY
+	mWrite "Second Number = "
+	mov eax,num2
+	call writeint
+	call crlf
+
+	mov dx,040Fh
+	call GotoXY
+	mWrite "A - B = "
+	pop eax
+	call writeint
 	ret
 
+	;----------Multiplication------------
 	Multiplication:
 	INVOKE MulNum, num1, num2
+	push eax
+	call clrscr			
+					;msgs displayed
+	mov dx,010Fh
+	call GotoXY
+	mWrite "--- Multiplication ---"
+	mov dx,020Fh
+	call GotoXY
+	mWrite "First Number= "
+	mov eax,num1
+	call writeint
+	call crlf
+
+	mov dx,030Fh
+	call GotoXY
+	mWrite "Second Number = "
+	mov eax,num2
+	call writeint
+	call crlf
+
+	mov dx,040Fh
+	call GotoXY
+	mWrite "A * B = "
+	pop eax
+	call writeint
 	ret
 
+	;-----------Division--------------
 	Division:
 	INVOKE DivNum, num1,num2
+	push edx
+	push eax 
+	call clrscr
+	mov dx,010Fh
+	call GotoXY
+	mWrite "--- Division ---"
+	mov dx,020Fh
+	call GotoXY
+	mWrite "First Number= "
+	mov eax,num1
+	call writeint
+	call crlf
+
+	mov dx,030Fh
+	call GotoXY
+	mWrite "Second Number = "
+	mov eax,num2
+	call writeint
+	call crlf
+
+	mov dx,040Fh
+	call GotoXY
+	mWrite "A / B = "
+	pop eax
+	call writeint
+
+	mov dx,050Fh
+	call GotoXY
+	pop edx
+	mov eax,edx
+	mWrite "Remainder = "
+	call writeint
 							
 	ret
 BasicCalc ENDP
