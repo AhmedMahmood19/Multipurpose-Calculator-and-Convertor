@@ -239,6 +239,8 @@ AddNum PROC,
 							;Apply the formula on the inputs
 
 							;Display the result at the end
+	
+	COMMENT @
 	call clrscr
 	mov dx,010Fh
 	call GotoXY
@@ -260,11 +262,12 @@ AddNum PROC,
 
 	mov dx,040Fh
 	call GotoXY
-	mWrite "A + B = "
+	mWrite "A + B = " 
+	@
 						;calculation
 	mov eax,val1
 	add eax,val2
-	call writeint
+	;call writeint
 
 		ret
 
@@ -282,6 +285,7 @@ SubNum PROC,
 							;Apply the formula on the inputs
 
 							;Display the result at the end
+	COMMENT @
 	call clrscr
 	mov dx,010Fh
 	call GotoXY
@@ -303,10 +307,11 @@ SubNum PROC,
 	mov dx,040Fh
 	call GotoXY
 	mWrite "A - B = "
+	@
 						;calculation
 	mov eax,val1
 	sub eax,val2
-	call writeint
+	;call writeint
 
 		ret
 
@@ -323,6 +328,7 @@ DivNum PROC,
 							;Apply the formula on the inputs
 
 							;Display the result at the end
+	COMMENT @
 	call clrscr
 	mov dx,010Fh
 	call GotoXY
@@ -344,6 +350,7 @@ DivNum PROC,
 	mov dx,040Fh
 	call GotoXY
 	mWrite "A / B = "
+	@
 						;calculation from here onwards
 	mov eax,val1
 	cdq
@@ -351,15 +358,12 @@ DivNum PROC,
 	mov edx,0			;initialising
 	idiv ebx
 	push edx		;saving edx value
-	call writeint
+	;call writeint
 
-	mWriteLn " "		;new line
-	mov dx,050Fh
-	call GotoXY
-	mWrite "Remainder = "
 	pop edx
-	mov eax,edx			;edx saves the remainder so moving that into eax so that we can output it
-	call writeint
+
+	;mov eax,edx			;edx saves the remainder so moving that into eax so that we can output it
+	;call writeint
 
 
 		ret
@@ -377,6 +381,7 @@ MulNum PROC,
 							;Apply the formula on the inputs
 
 							;Display the result at the end
+	COMMENT @
 	call clrscr			
 					;msgs displayed
 	mov dx,010Fh
@@ -399,7 +404,7 @@ MulNum PROC,
 	mov dx,040Fh
 	call GotoXY
 	mWrite "A * B = "
-				
+	@			
 				;actual calculation from here onwards
 
 	mov ax, sword ptr val1
@@ -407,7 +412,7 @@ MulNum PROC,
 	imul bx
 	shl edx,16
 	or eax,edx
-	call writeint
+	;call writeint
 	
 
 
