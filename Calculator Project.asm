@@ -18,6 +18,7 @@ MulNum PROTO,
 
 
 .data
+f1000 REAL8 1.0E-3
 										;MAIN MENU VARIABLES
 MenuMsg BYTE "Select an option:",0Ah,0
 Op1 BYTE "1.GPA Calculator",0Ah,0
@@ -499,16 +500,18 @@ ConvertorMenu PROC
 	je Mass
 	CMP eax,3
 	je Temperature
-	jne defaultconv
+	jmp defaultconv
 	
 	LLength:
-		;TODO LENGTH unit func where option will be picked and result shown in same fuc
+		call LengthConvertor
 		ret
 
 	Mass:
+		call MassConvertor
 		ret
 	
 	Temperature:
+		call TemperatureConvertor
 		ret
 
 	defaultconv:
@@ -516,6 +519,124 @@ ConvertorMenu PROC
 		call waitmsg
 	ret
 ConvertorMenu ENDP
+
+;-----------------------------------------------------------------------
+LengthConvertor PROC
+;	User picks an option from the different unit conversions of length
+;	Then user enters a value and the result after conversion is displayed
+;	Receives: NONE
+;	Returns: NONE
+;-----------------------------------------------------------------------
+	LOCAL value:DWORD
+
+	call clrscr
+	mov dx,010Fh
+	call GotoXY
+	mWriteln "Choose An Option:"
+
+	mov dx,030Fh
+	call GotoXY
+	mWriteln "1. Meters to Kilometers"
+	
+	mov dx,040Fh
+	call GotoXY
+	mWriteln "2. Kilometers to Meters"
+	
+	mov dx,050Fh
+	call GotoXY
+	mWriteln "3. Inches to Feet"
+
+	mov dx,060Fh
+	call GotoXY
+	mWriteln "4. Feet to Inches"
+
+	mov dx,070Fh
+	call GotoXY
+	mWriteln "5. Meters to Feet"
+
+	mov dx,080Fh
+	call GotoXY
+	mWriteln "6. Feet to Meters"
+
+	mov dx,090Fh
+	call GotoXY
+	call readint
+	push eax
+
+	call ClrScr
+	mWriteln "Enter a Positive Value:"
+	call readdec
+	mov value,eax
+	pop eax
+
+	CMP eax,1
+	je MtoK
+	CMP eax,2
+	je KtoM
+	CMP eax,3
+	je ItoF
+	CMP eax,4
+	je FtoI
+	CMP eax,5
+	je MtoF
+	CMP eax,6
+	je FtoM
+	jmp defaultconv
+	
+	MtoK:
+		mWriteln "Meters to Kilometers:"
+		fld f1000		;push 1/1000
+		fimul value		;divide value by 1000
+		call writefloat
+	ret
+
+	KtoM:
+		mWriteln "Kilometers to Meters:"
+		
+		call writeint
+	ret
+
+	ItoF:
+		mWriteln "Inches to Feet:"
+	ret
+
+	FtoI:
+		mWriteln "Feet to Inches:"
+	ret
+
+	MtoF:
+		mWriteln "Meters to Feet:"
+	ret
+
+	FtoM:
+		mWriteln "Feet to Meters:"
+	ret
+
+	defaultconv:
+		mWriteln "Invalid Input!"
+		call waitmsg
+	ret
+LengthConvertor ENDP
+
+;-----------------------------------------------------------------------
+MassConvertor PROC
+;	User picks an option from the different unit conversions of mass
+;	Then user enters a value and the result after conversion is displayed
+;	Receives: NONE
+;	Returns: NONE
+;-----------------------------------------------------------------------
+	ret
+MassConvertor ENDP
+
+;-----------------------------------------------------------------------
+TemperatureConvertor PROC
+;	User picks an option from the different unit conversions of Temperature
+;	Then user enters a value and the result after conversion is displayed
+;	Receives: NONE
+;	Returns: NONE
+;-----------------------------------------------------------------------
+	ret
+TemperatureConvertor ENDP
 
 ;-----------------------------------------------------------------------
 QuadraticCalc PROC
