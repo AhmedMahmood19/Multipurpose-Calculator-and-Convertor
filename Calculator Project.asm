@@ -30,6 +30,9 @@ ConstCtoF REAL8 1.8E+0			 ;9/5
 ConstFtoC REAL8 0.55555555555E+0 ;5/9
 Const32	  REAL8 32.0
 Const273  REAL8 273.15
+Constneg4 REAL8 -4.0
+ConstZero REAL8 0.0
+ConstTwo  REAL8 2.0
 										;MAIN MENU VARIABLES
 MenuMsg BYTE "Select an option:",0Ah,0
 Op1 BYTE "1.GPA Calculator",0Ah,0
@@ -989,7 +992,82 @@ QuadraticCalc PROC
 ;	Receives: NONE
 ;	Returns: NONE
 ;-----------------------------------------------------------------------
+	LOCAL varA:REAL8,varB:REAL8,varC:REAL8,Discrim:REAL8
+	call ClrScr
+			;==Taking Input==
+	fld ConstZero	;Load zero
+	mWriteLn "For Quadratic Equation: Ax^2 + Bx + C = 0"
+	mWrite "Enter A: "
+	call readfloat
+	
+	FCOMI st(0),st(1)	;Compare A with 0
+	jne AisNot0
+	mWriteLn "ERROR: 'A' can't be 0 in a quadratic equation!"
+	jmp stop
 
+AisNot0:
+	fstp varA		;store A
+	
+	mWrite "Enter B: "
+	call readfloat
+	fstp varB
+	mWrite "Enter C: "
+	call readfloat
+	fstp varC
+	call CRLF
+
+			;==Calculating discriminant b^2 - 4ac==
+	fld varB				;load B
+	fmul varB				;b^2 (1)
+	fld varA				;load A
+	fmul varC				;A*C
+	fmul Constneg4			;-4*A*C (2)
+	fadd					;pop (1) and (2),add and push the sum
+	fst Discrim				;save the discriminant
+
+			;==Checking for roots==
+	FCOMI st(0),st(1)		;comparing discriminant with ConstZero(loaded at the start)
+	JB Noroot				;have to use JB, JL won't work
+	JE Oneroot
+	JA Tworoots
+			
+			;==Calculating roots==
+Noroot:
+	mWriteLn "No Real Roots!"
+	jmp stop
+Oneroot:					;-B/2A
+	mWriteLn "One Real Root!"
+	FLD varB
+	FCHS					;-B
+	FLD varA
+	FMUL ConstTwo			;2A
+	FDIV					;-B/2A st(1)/st(0)
+	mWrite"x = "
+	call writefloat
+	jmp stop
+Tworoots:
+	mWriteLn "Two Distinct Real Roots!"
+	FLD Discrim
+	FSQRT
+	FLD st(0)
+	FCHS					;-ve answer of sqrt above +ve answer in floatstack
+
+	FSUB varB				;-B-root(discriminant)
+	FLD varA
+	FMUL ConstTwo			;2A
+	FDIV					;-B-root(discriminant)/2A
+	mWrite"x = "
+	call writefloat
+	call CRLF
+
+	FSTP st(0)
+	FSUB varB				;-B+root(discriminant)
+	FLD varA
+	FMUL ConstTwo			;2A
+	FDIV					;-B+root(discriminant)/2A
+	mWrite"x = "
+	call writefloat
+stop:
 	ret
 QuadraticCalc ENDP
 
