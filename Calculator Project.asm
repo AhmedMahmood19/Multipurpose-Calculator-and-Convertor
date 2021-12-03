@@ -121,6 +121,7 @@ MainMenu ENDP
 
 ;-----------------------------------------------------------------------
 GPACalc PROC
+LOCAL gradepoint:real8,totalcreditHrs:dword,creditHr:dword,totalQualityPoints:real8,qualityPoint:real8,count:dword
 ;	Let user enter no. of courses and set a max limit and min limit
 ;	Let them enter GPA and Credit Hrs for each course
 ;	Then Calculate and Display the SGPA
@@ -134,6 +135,44 @@ GPACalc PROC
 							;Apply the formula on the inputs
 
 							;Display the result at the end
+	mov count,1
+	mov totalcreditHrs,0
+	call clrscr
+	mWrite "---------- GPA CALCULATOR -------------"
+	call crlf
+	mWrite "How many courses do you have? "
+	call readint
+	mov ecx,eax
+l1:
+	mWrite "Course #"
+	mov eax,count
+	call writedec 
+	call crlf
+	mwrite "Enter Credit Hours of this course "
+	call readint
+	mov creditHr,eax
+	add totalcreditHrs,eax
+	
+	mWrite "Enter the grade you got in this course "
+	call readfloat
+	fstp gradepoint
+	fld gradepoint
+	fimul creditHr
+	fstp qualityPoint
+	fld totalQualityPoints
+	fadd qualityPoint
+	fstp totalQualityPoints
+	inc count
+	loop l1
+	fld totalQualityPoints
+	fidiv totalcreditHrs
+	mWrite "Calculation complete!"
+	call crlf
+	mWrite "Your SGPA is "
+	call writefloat
+	
+	
+
 		ret
 GPACalc ENDP
 
