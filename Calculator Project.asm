@@ -231,6 +231,8 @@ LOCAL num1:sdword,num2:sdword
 	mov dx,080Fh
 	call GotoXY
 	call readint	
+	cmp eax,4
+	JA invalid
 	push eax		;storing user's choice as we have to use eax to store numbers
 
 					;input numbers
@@ -259,6 +261,9 @@ LOCAL num1:sdword,num2:sdword
 	je Multiplication
 	CMP eax,4
 	je Division
+invalid:
+	mWrite "Invalid Option"
+	ret
 
 	;--------------Addition---------------
 	Addition:
