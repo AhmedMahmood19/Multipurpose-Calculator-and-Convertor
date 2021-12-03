@@ -133,7 +133,7 @@ MainMenu ENDP
 
 ;-----------------------------------------------------------------------
 GPACalc PROC
-LOCAL gradepoint:real8,totalcreditHrs:dword,creditHr:dword,totalQualityPoints:real8,qualityPoint:real8,count:dword
+LOCAL gradepoint:real8,totalcreditHrs:dword,creditHr:dword,totalQualityPoints:real8,qualityPoint:real8,count:dword,invalidCheck:real8
 ;	Let user enter no. of courses and set a max limit and min limit
 ;	Let them enter GPA and Credit Hrs for each course
 ;	Then Calculate and Display the SGPA
@@ -147,6 +147,8 @@ LOCAL gradepoint:real8,totalcreditHrs:dword,creditHr:dword,totalQualityPoints:re
 							;Apply the formula on the inputs
 
 							;Display the result at the end
+	fldz
+	fstp invalidCheck
 	mov count,1
 	mov totalcreditHrs,0
 	call clrscr
@@ -155,6 +157,8 @@ LOCAL gradepoint:real8,totalcreditHrs:dword,creditHr:dword,totalQualityPoints:re
 	mWrite "How many courses do you have? "
 	call readint
 	mov ecx,eax
+	cmp eax,1
+	Jl invalidCourses
 l1:
 	mWrite "Course #"
 	mov eax,count
@@ -163,11 +167,25 @@ l1:
 	mwrite "Enter Credit Hours of this course "
 	call readint
 	mov creditHr,eax
+	cmp eax,1
+	Jl invalidCreditHrs
 	add totalcreditHrs,eax
 	
 	mWrite "Enter the grade you got in this course "
 	call readfloat
 	fstp gradepoint
+	push eax
+
+	;------------
+	;code to cmp gradepoint entered is valid or not
+
+	fcom  invalidCheck   ;compare ST(0) with the value of the real8_var variable
+	fstsw ax          ;copy the Status Word containing the result to AX
+	fwait             ;insure the previous instruction is completed
+	sahf 
+	jb invalidGradePoint
+	;-----------
+	pop eax
 	fld gradepoint
 	fimul creditHr
 	fstp qualityPoint
@@ -182,10 +200,17 @@ l1:
 	call crlf
 	mWrite "Your SGPA is "
 	call writefloat
-	
-	
+	ret
 
+invalidCourses:
+	mwrite "Invalid Number Of Courses"
+	ret
+invalidCreditHrs:
+	mwrite "Invalid credit hours"
 		ret
+invalidGradePoint:
+	mwrite "Invalid grade point entered"
+	ret
 GPACalc ENDP
 
 ;-----------------------------------------------------------------------
