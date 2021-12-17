@@ -658,6 +658,8 @@ jmp endexp
 outofrange:
 	mWrite "ERROR: Result is greater than 32 bits and cannot be displayed"
 endexp:
+	call crlf
+	call waitmsg
 	ret
 ExpCalc ENDP
 
@@ -758,13 +760,19 @@ LengthConvertor PROC
 	mov dx,090Fh
 	call GotoXY
 	call readint
-	push eax
 
+					;check if options is between 1 && 6
+	CMP eax,1
+	JL defaultconv	;option is lesser than 1
+	CMP eax,6
+	JG defaultconv	;option is greater than 6
+
+	push eax		;store option
 	call ClrScr
 	mWriteln "Enter a Positive Integer Value:"
 	call readdec
 	mov value,eax
-	pop eax
+	pop eax			;restore option for comparisons
 
 	CMP eax,1
 	je MtoK
@@ -785,12 +793,16 @@ LengthConvertor PROC
 		fld ConstMtoK		;load 1/1000 into ST(0)
 		fimul value		;mul value by 1/1000
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	KtoM:
 		mWriteln "Kilometers to Meters:"
 		INVOKE MulNum,value,1000	;multiply by 1000
 		call writedec
+		call crlf
+		call waitmsg
 	ret
 
 	ItoF:
@@ -798,12 +810,16 @@ LengthConvertor PROC
 		fld ConstItoF		;load 1/12 into ST(0)
 		fimul value		;mul value by 1/12
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	FtoI:
 		mWriteln "Feet to Inches:"
 		INVOKE MulNum,value,12	;multiply by 12
 		call writedec
+		call crlf
+		call waitmsg
 	ret
 
 	MtoF:
@@ -811,6 +827,8 @@ LengthConvertor PROC
 		fld ConstMtoF		;load 3.28084 into ST(0)
 		fimul value		;mul value by 3.28084
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	FtoM:
@@ -818,6 +836,8 @@ LengthConvertor PROC
 		fld ConstFtoM		;load 0.3048 into ST(0)
 		fimul value		;mul value by 0.3048
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	defaultconv:
@@ -867,8 +887,14 @@ MassConvertor PROC
 	mov dx,090Fh
 	call GotoXY
 	call readint
-	push eax
 
+					;check if options is between 1 && 6
+	CMP eax,1
+	JL defaultconv	;option is lesser than 1
+	CMP eax,6
+	JG defaultconv	;option is greater than 6
+
+	push eax		;store option
 	call ClrScr
 	mWriteln "Enter a Positive Integer Value:"
 	call readdec
@@ -894,12 +920,16 @@ MassConvertor PROC
 		fld ConstMtoK
 		fimul value		;mul value by 1/1000
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	KtoG:
 		mWriteln "Kilograms to Grams:"
 		INVOKE MulNum,value,1000	;multiply by 1000
 		call writedec
+		call crlf
+		call waitmsg
 	ret
 
 	KtoP:
@@ -907,6 +937,8 @@ MassConvertor PROC
 		fld ConstKtoP
 		fimul value		;mul value by 2.20462
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	PtoK:
@@ -914,6 +946,8 @@ MassConvertor PROC
 		fld ConstPtoK
 		fimul value		;mul value by 0.453592
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	OtoP:
@@ -921,12 +955,16 @@ MassConvertor PROC
 		fld ConstOtoP
 		fimul value		;mul value by 0.0625
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	PtoO:
 		mWriteln "Pounds to Ounces:"
 		INVOKE MulNum,value,16	;multiply by 16
 		call writedec
+		call crlf
+		call waitmsg
 	ret
 
 	defaultconv:
@@ -976,8 +1014,14 @@ TemperatureConvertor PROC
 	mov dx,090Fh
 	call GotoXY
 	call readint
-	push eax
 
+					;check if options is between 1 && 6
+	CMP eax,1
+	JL defaultconv	;option is lesser than 1
+	CMP eax,6
+	JG defaultconv	;option is greater than 6
+
+	push eax		;store option
 	call ClrScr
 	mWriteln "Enter an Integer Value:"
 	call readint
@@ -1004,6 +1048,8 @@ TemperatureConvertor PROC
 		fmul ConstCtoF		;mul value by 9/5
 		fadd Const32		;add 32
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	FtoC:
@@ -1012,6 +1058,8 @@ TemperatureConvertor PROC
 		fsub Const32		;minus 32
 		fmul ConstFtoC		;mul value by 5/9
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	CtoK:
@@ -1019,6 +1067,8 @@ TemperatureConvertor PROC
 		fild value
 		fadd Const273
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	KtoC:
@@ -1026,6 +1076,8 @@ TemperatureConvertor PROC
 		fild value
 		fsub Const273
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	FtoK:
@@ -1035,6 +1087,8 @@ TemperatureConvertor PROC
 		fmul constftoc
 		fadd const273
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	KtoF:
@@ -1044,6 +1098,8 @@ TemperatureConvertor PROC
 		fmul constctof
 		fadd const32
 		call writefloat
+		call crlf
+		call waitmsg
 	ret
 
 	defaultconv:
@@ -1137,6 +1193,8 @@ Tworoots:
 	mWrite"x = "
 	call writefloat
 stop:
+	call crlf
+	call waitmsg
 	ret
 QuadraticCalc ENDP
 
