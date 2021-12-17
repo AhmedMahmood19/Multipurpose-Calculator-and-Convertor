@@ -34,13 +34,13 @@ Constneg4 REAL8 -4.0
 ConstZero REAL8 0.0
 ConstTwo  REAL8 2.0
 										;MAIN MENU VARIABLES
-MenuMsg BYTE "Select an option:",0Ah,0
-Op1 BYTE "1.GPA Calculator",0Ah,0
-Op2 BYTE "2.Basic Calculator",0Ah,0
-Op3 BYTE "3.Exponent Calculator",0Ah,0
-Op4 BYTE "4.Unit Convertor",0Ah,0
-Op5 BYTE "5.Quadratic Equation Calculator",0Ah,0
-OpDef BYTE "Invalid Input!",0Ah,0		;Default case for incorrect input
+MenuMsg BYTE "| Select an option:",0Ah,0
+Op1 BYTE "| 1.GPA Calculator",0Ah,0
+Op2 BYTE "| 2.Basic Calculator",0Ah,0
+Op3 BYTE "| 3.Exponent Calculator",0Ah,0
+Op4 BYTE "| 4.Unit Convertor",0Ah,0
+Op5 BYTE "| 5.Quadratic Equation Calculator",0Ah,0
+OpDef BYTE "| Invalid Input!",0Ah,0		;Default case for incorrect input
 
 ;-------------------------------------------------------------------------
 
@@ -59,38 +59,38 @@ MainMenu PROC
 ;	Returns: NONE
 ;-----------------------------------------------------------------------
 							;This part is for printing the menu and options
-	mov dx,010Fh
-	call GotoXY
+	;mov dx,010Fh
+	;call GotoXY
 	mov edx,OFFSET MenuMsg
 	call writestring
 
-	mov dx,030Fh
-	call GotoXY
+	;mov dx,030Fh
+	;call GotoXY
 	mov edx,OFFSET Op1
 	call writestring
 	
-	mov dx,040Fh
-	call GotoXY
+	;mov dx,040Fh
+	;call GotoXY
 	mov edx,OFFSET Op2
 	call writestring
 	
-	mov dx,050Fh
-	call GotoXY
+	;mov dx,050Fh
+	;call GotoXY
 	mov edx,OFFSET Op3
 	call writestring
 
-	mov dx,060Fh
-	call GotoXY
+	;mov dx,060Fh
+	;call GotoXY
 	mov edx,OFFSET Op4
 	call writestring
 
-	mov dx,070Fh
-	call GotoXY
+	;mov dx,070Fh
+	;call GotoXY
 	mov edx,OFFSET Op5
 	call writestring
 						;Takes the option as input and compares, then jumps to that func
-	mov dx,080Fh
-	call GotoXY
+	;mov dx,080Fh
+	;call GotoXY
 	call readint		
 	CMP eax,1
 	je GPA
@@ -155,26 +155,27 @@ LOCAL gradepoint:real8,totalcreditHrs:dword,creditHr:dword,totalQualityPoints:re
 	mov count,1
 	mov totalcreditHrs,0
 	call clrscr
-	mWrite "---------- GPA CALCULATOR -------------"
+
+	mWrite "| ---------- GPA CALCULATOR ------------- |"
 	call crlf
-	mWrite "How many courses do you have? "
+	mWrite "| How many courses do you have? "
 	call readint
 	mov ecx,eax
 	cmp eax,1
 	Jl invalidCourses
 l1:
-	mWrite "Course #"
+	mWrite "| Course #"
 	mov eax,count
 	call writedec 
 	call crlf
-	mwrite "Enter Credit Hours of this course "
+	mwrite "| Enter Credit Hours of this course "
 	call readint
 	mov creditHr,eax
 	cmp eax,1
 	Jl invalidCreditHrs
 	add totalcreditHrs,eax
 	
-	mWrite "Enter the grade you got in this course "
+	mWrite "| Enter the grade you got in this course "
 	call readfloat
 	fstp gradepoint
 	push eax
@@ -186,7 +187,7 @@ l1:
 	fstsw ax          ;copy the Status Word containing the result to AX
 	fwait             ;insure the previous instruction is completed
 	sahf 
-	jb invalidGradePoint
+	jl invalidGradePoint
 	;-----------
 	pop eax
 	fld gradepoint
@@ -199,20 +200,20 @@ l1:
 	loop l1
 	fld totalQualityPoints
 	fidiv totalcreditHrs
-	mWrite "Calculation complete!"
+	mWrite "| Calculation complete!"
 	call crlf
-	mWrite "Your SGPA is "
+	mWrite "| Your SGPA is "
 	call writefloat
 	ret
 
 invalidCourses:
-	mwrite "Invalid Number Of Courses"
+	mwrite "| Invalid Number Of Courses"
 	ret
 invalidCreditHrs:
-	mwrite "Invalid credit hours"
+	mwrite "| Invalid credit hours"
 		ret
 invalidGradePoint:
-	mwrite "Invalid grade point entered"
+	mwrite "| Invalid grade point entered"
 	ret
 GPACalc ENDP
 
@@ -239,25 +240,19 @@ LOCAL num1:sdword,num2:sdword
 	
 
 	call clrscr
-	mov dx,030Fh
-	call GotoXY
-	mWriteln "1.Addition"	
+	
+	mWriteln "| 1.Addition"	
+
+
+	mWriteln "| 2.Subtraction"	
+	
+	
+	mWriteln "| 3.Multiplication"	
 
 	
-	mov dx,040Fh
-	call GotoXY
-	mWriteln "2.Subtraction"	
+	mWriteln "| 4.Division"	
+
 	
-	mov dx,050Fh
-	call GotoXY
-	mWriteln "3.Multiplication"	
-
-	mov dx,060Fh
-	call GotoXY
-	mWriteln "4.Division"	
-
-	mov dx,080Fh
-	call GotoXY
 	call readint	
 	cmp eax,4
 	JA invalid
@@ -265,17 +260,14 @@ LOCAL num1:sdword,num2:sdword
 
 					;input numbers
 	call clrscr
-	mov dx,010Fh
-	call GotoXY
-	mWriteln "Enter two numbers: "
+	
+	mWriteln "| Enter two numbers: "
 
-	mov dx,020Fh
-	call GotoXY
+	
 	call readint	;read num1
 	mov num1,eax
 
-	mov dx,030Fh
-	call GotoXY
+	
 	call readint	;read num2
 	mov num2,eax
 
@@ -290,7 +282,7 @@ LOCAL num1:sdword,num2:sdword
 	CMP eax,4
 	je Division
 invalid:
-	mWrite "Invalid Option"
+	mWrite "| Invalid Option"
 	ret
 
 	;--------------Addition---------------
@@ -298,27 +290,23 @@ invalid:
 	INVOKE AddNum, num1,num2	;function call
 	push eax
 	call clrscr
-	mov dx,010Fh
-	call GotoXY
-	mWrite "--- Addition ---"
+	
+	mWrite "| --- Addition --- |"
 
-	mov dx,020Fh
-	call GotoXY
-	mWrite "First Number = "
+	call crlf
+	mWrite "| First Number = "
 	mov eax,num1
 	call writeint
 	call crlf
 
-	mov dx,030Fh
-	call GotoXY
-	mWrite "Second Number = "
+	
+	mWrite "| Second Number = "
 	mov eax,num2
 	call writeint
 	call crlf
 
-	mov dx,040Fh
-	call GotoXY
-	mWrite "A + B = " 
+	
+	mWrite "| A + B = " 
 	pop eax
 	call writeint
 	ret
@@ -328,26 +316,20 @@ invalid:
 	INVOKE SubNum, num1,num2
 	push eax
 	call clrscr
-	mov dx,010Fh
-	call GotoXY
-	mWrite "--- Subtraction ---"
-	mov dx,020Fh
-	call GotoXY
-	mWrite "First Number= "
+	
+	mWrite "| --- Subtraction --- |"
+	call crlf
+	mWrite "| First Number= "
 	mov eax,num1
 	call writeint
 	call crlf
 
-	mov dx,030Fh
-	call GotoXY
-	mWrite "Second Number = "
+	mWrite "| Second Number = "
 	mov eax,num2
 	call writeint
 	call crlf
-
-	mov dx,040Fh
-	call GotoXY
-	mWrite "A - B = "
+	
+	mWrite "| A - B = "
 	pop eax
 	call writeint
 	ret
@@ -358,26 +340,21 @@ invalid:
 	push eax
 	call clrscr			
 					;msgs displayed
-	mov dx,010Fh
-	call GotoXY
-	mWrite "--- Multiplication ---"
-	mov dx,020Fh
-	call GotoXY
-	mWrite "First Number= "
+
+	mWrite "| --- Multiplication --- |"
+	call crlf
+	mWrite "| First Number= "
 	mov eax,num1
 	call writeint
 	call crlf
 
-	mov dx,030Fh
-	call GotoXY
-	mWrite "Second Number = "
+	
+	mWrite "| Second Number = "
 	mov eax,num2
 	call writeint
 	call crlf
 
-	mov dx,040Fh
-	call GotoXY
-	mWrite "A * B = "
+	mWrite "| A * B = "
 	pop eax
 	call writeint
 	ret
@@ -388,26 +365,21 @@ invalid:
 	push edx
 	push eax 
 	call clrscr
-	mov dx,010Fh
-	call GotoXY
-	mWrite "--- Division ---"
-	mov dx,020Fh
-	call GotoXY
-	mWrite "First Number= "
+	
+	mWrite "| --- Division ---"
+	call crlf
+	mWrite "| First Number= "
 	mov eax,num1
 	call writeint
 	call crlf
 
-	mov dx,030Fh
-	call GotoXY
-	mWrite "Second Number = "
+	
+	mWrite "| Second Number = "
 	mov eax,num2
 	call writeint
 	call crlf
-
-	mov dx,040Fh
-	call GotoXY
-	mWrite "A / B = "
+	
+	mWrite "| A / B = "
 	pop eax
 	call writeint
 
@@ -415,7 +387,7 @@ invalid:
 	call GotoXY
 	pop edx
 	mov eax,edx
-	mWrite "Remainder = "
+	mWrite "| Remainder = "
 	call writeint
 							
 	ret
@@ -437,25 +409,22 @@ AddNum PROC,
 	call clrscr
 	mov dx,010Fh
 	call GotoXY
-	mWrite "--- Addition ---"
+	mWrite "| --- Addition --- |"
 
-	mov dx,020Fh
-	call GotoXY
-	mWrite "First Number = "
+	
+	mWrite "| First Number = "
 	mov eax,val1
 	call writeint
 	call crlf
 
-	mov dx,030Fh
-	call GotoXY
-	mWrite "Second Number = "
+	
+	mWrite "| Second Number = "
 	mov eax,val2
 	call writeint
 	call crlf
 
-	mov dx,040Fh
-	call GotoXY
-	mWrite "A + B = " 
+	
+	mWrite "| A + B = " 
 	@
 						;calculation
 	mov eax,val1
@@ -482,24 +451,21 @@ SubNum PROC,
 	call clrscr
 	mov dx,010Fh
 	call GotoXY
-	mWrite "--- Subtraction ---"
-	mov dx,020Fh
-	call GotoXY
-	mWrite "First Number= "
+	mWrite "| --- Subtraction --- |"
+	
+	mWrite "| First Number= "
 	mov eax,val1
 	call writeint
 	call crlf
 
-	mov dx,030Fh
-	call GotoXY
-	mWrite "Second Number = "
+	
+	mWrite "| Second Number = "
 	mov eax,val2
 	call writeint
 	call crlf
 
-	mov dx,040Fh
-	call GotoXY
-	mWrite "A - B = "
+
+	mWrite "| A - B = "
 	@
 						;calculation
 	mov eax,val1
@@ -523,26 +489,22 @@ DivNum PROC,
 							;Display the result at the end
 	COMMENT @
 	call clrscr
-	mov dx,010Fh
-	call GotoXY
-	mWrite "--- Division ---"
-	mov dx,020Fh
-	call GotoXY
-	mWrite "First Number= "
+	
+	mWrite "| --- Division --- |"
+	
+	mWrite "| First Number= "
 	mov eax,val1
 	call writeint
 	call crlf
 
-	mov dx,030Fh
-	call GotoXY
-	mWrite "Second Number = "
+
+	mWrite "| Second Number = "
 	mov eax,val2
 	call writeint
 	call crlf
 
-	mov dx,040Fh
-	call GotoXY
-	mWrite "A / B = "
+
+	mWrite "| A / B = "
 	@
 						;calculation from here onwards
 	mov eax,val1
@@ -579,24 +541,22 @@ MulNum PROC,
 					;msgs displayed
 	mov dx,010Fh
 	call GotoXY
-	mWrite "--- Multiplication ---"
-	mov dx,020Fh
-	call GotoXY
-	mWrite "First Number= "
+	mWrite "| --- Multiplication --- |"
+	
+	mWrite "| First Number= "
 	mov eax,val1
 	call writeint
 	call crlf
 
-	mov dx,030Fh
-	call GotoXY
-	mWrite "Second Number = "
+	
+	mWrite "| Second Number = "
 	mov eax,val2
 	call writeint
 	call crlf
 
 	mov dx,040Fh
 	call GotoXY
-	mWrite "A * B = "
+	mWrite "| A * B = "
 	@			
 				;actual calculation from here onwards
 
@@ -629,16 +589,16 @@ ExpCalc PROC
 jmp input
 
 invalidinput:
-	mWriteln "Input was Invalid!"
+	mWriteln "| Input was Invalid!"
 	call crlf
 input:
-	mWrite "Enter a 16 bit base: "
+	mWrite "| Enter a 16 bit base: "
 	call readdec
 	cmp ax,0
 je  invalidinput
 	mov base,ax
 
-	mWrite "Enter a 8 bit exponent: "
+	mWrite "| Enter a 8 bit exponent: "
 	call readdec
 	cmp al,0
 je  invalidinput
@@ -652,11 +612,11 @@ Lexp:
 LOOP Lexp
 	cmp edx,0
 jnz	outofrange
-	mWrite "Result is: "
+	mWrite "| Result is: "
 	call writedec
 jmp endexp
 outofrange:
-	mWrite "ERROR: Result is greater than 32 bits and cannot be displayed"
+	mWrite "| ERROR: Result is greater than 32 bits and cannot be displayed"
 endexp:
 	call crlf
 	call waitmsg
@@ -673,24 +633,16 @@ ConvertorMenu PROC
 ;-----------------------------------------------------------------------
 	
 	call clrscr
-	mov dx,010Fh
-	call GotoXY
-	mWriteln "Choose An Option:"
 
-	mov dx,030Fh
-	call GotoXY
-	mWriteln "1.Length Convertor"
-	
-	mov dx,040Fh
-	call GotoXY
-	mWriteln "2.Mass Convertor"
-	
-	mov dx,050Fh
-	call GotoXY
-	mWriteln "3.Temperature Convertor"
+	mWriteln "| Choose An Option:"
 
-	mov dx,060Fh
-	call GotoXY
+	mWriteln "| 1.Length Convertor"
+
+	mWriteln "| 2.Mass Convertor"
+	
+	mWriteln "| 3.Temperature Convertor"
+
+	
 	call readint
 	
 	CMP eax,1
@@ -729,33 +681,28 @@ LengthConvertor PROC
 	LOCAL value:DWORD
 
 	call clrscr
-	mov dx,010Fh
-	call GotoXY
-	mWriteln "Choose An Option:"
+	
+	mWriteln "| Choose An Option:"
 
-	mov dx,030Fh
-	call GotoXY
-	mWriteln "1. Meters to Kilometers"
 	
-	mov dx,040Fh
-	call GotoXY
-	mWriteln "2. Kilometers to Meters"
+	mWriteln "| 1. Meters to Kilometers"
 	
-	mov dx,050Fh
-	call GotoXY
-	mWriteln "3. Inches to Feet"
+	mWriteln "| 2. Kilometers to Meters"
+	
+	
+	mWriteln "| 3. Inches to Feet"
 
 	mov dx,060Fh
 	call GotoXY
-	mWriteln "4. Feet to Inches"
+	mWriteln "| 4. Feet to Inches"
 
 	mov dx,070Fh
 	call GotoXY
-	mWriteln "5. Meters to Feet"
+	mWriteln "| 5. Meters to Feet"
 
 	mov dx,080Fh
 	call GotoXY
-	mWriteln "6. Feet to Meters"
+	mWriteln "| 6. Feet to Meters"
 
 	mov dx,090Fh
 	call GotoXY
@@ -769,7 +716,7 @@ LengthConvertor PROC
 
 	push eax		;store option
 	call ClrScr
-	mWriteln "Enter a Positive Integer Value:"
+	mWriteln "| Enter a Positive Integer Value:"
 	call readdec
 	mov value,eax
 	pop eax			;restore option for comparisons
@@ -789,7 +736,7 @@ LengthConvertor PROC
 	jmp defaultconv
 	
 	MtoK:
-		mWriteln "Meters to Kilometers:"
+		mWriteln "| Meters to Kilometers:"
 		fld ConstMtoK		;load 1/1000 into ST(0)
 		fimul value		;mul value by 1/1000
 		call writefloat
@@ -798,7 +745,7 @@ LengthConvertor PROC
 	ret
 
 	KtoM:
-		mWriteln "Kilometers to Meters:"
+		mWriteln "| Kilometers to Meters:"
 		INVOKE MulNum,value,1000	;multiply by 1000
 		call writedec
 		call crlf
@@ -806,7 +753,7 @@ LengthConvertor PROC
 	ret
 
 	ItoF:
-		mWriteln "Inches to Feet:"
+		mWriteln "| Inches to Feet:"
 		fld ConstItoF		;load 1/12 into ST(0)
 		fimul value		;mul value by 1/12
 		call writefloat
@@ -815,7 +762,7 @@ LengthConvertor PROC
 	ret
 
 	FtoI:
-		mWriteln "Feet to Inches:"
+		mWriteln "| Feet to Inches:"
 		INVOKE MulNum,value,12	;multiply by 12
 		call writedec
 		call crlf
@@ -823,7 +770,7 @@ LengthConvertor PROC
 	ret
 
 	MtoF:
-		mWriteln "Meters to Feet:"
+		mWriteln "| Meters to Feet:"
 		fld ConstMtoF		;load 3.28084 into ST(0)
 		fimul value		;mul value by 3.28084
 		call writefloat
@@ -832,7 +779,7 @@ LengthConvertor PROC
 	ret
 
 	FtoM:
-		mWriteln "Feet to Meters:"
+		mWriteln "| Feet to Meters:"
 		fld ConstFtoM		;load 0.3048 into ST(0)
 		fimul value		;mul value by 0.3048
 		call writefloat
@@ -841,7 +788,7 @@ LengthConvertor PROC
 	ret
 
 	defaultconv:
-		mWriteln "Invalid Input!"
+		mWriteln "| Invalid Input!"
 		call waitmsg
 	ret
 LengthConvertor ENDP
@@ -858,31 +805,31 @@ MassConvertor PROC
 	call clrscr
 	mov dx,010Fh
 	call GotoXY
-	mWriteln "Choose An Option:"
+	mWriteln "| Choose An Option:"
 
 	mov dx,030Fh
 	call GotoXY
-	mWriteln "1. Grams to Kilograms"
+	mWriteln "| 1. Grams to Kilograms"
 	
 	mov dx,040Fh
 	call GotoXY
-	mWriteln "2. Kilograms to Grams"
+	mWriteln "| 2. Kilograms to Grams"
 	
 	mov dx,050Fh
 	call GotoXY
-	mWriteln "3. Kilograms to Pounds"
+	mWriteln "| 3. Kilograms to Pounds"
 
 	mov dx,060Fh
 	call GotoXY
-	mWriteln "4. Pounds to Kilograms"
+	mWriteln "| 4. Pounds to Kilograms"
 
 	mov dx,070Fh
 	call GotoXY
-	mWriteln "5. Ounces to Pounds"
+	mWriteln "| 5. Ounces to Pounds"
 
 	mov dx,080Fh
 	call GotoXY
-	mWriteln "6. Pounds to Ounces"
+	mWriteln "| 6. Pounds to Ounces"
 
 	mov dx,090Fh
 	call GotoXY
@@ -896,7 +843,7 @@ MassConvertor PROC
 
 	push eax		;store option
 	call ClrScr
-	mWriteln "Enter a Positive Integer Value:"
+	mWriteln "| Enter a Positive Integer Value:"
 	call readdec
 	mov value,eax
 	pop eax
@@ -916,7 +863,7 @@ MassConvertor PROC
 	jmp defaultconv
 	
 	GtoK:
-		mWriteln "Grams to Kilograms:"
+		mWriteln "| Grams to Kilograms:"
 		fld ConstMtoK
 		fimul value		;mul value by 1/1000
 		call writefloat
@@ -925,7 +872,7 @@ MassConvertor PROC
 	ret
 
 	KtoG:
-		mWriteln "Kilograms to Grams:"
+		mWriteln "| Kilograms to Grams:"
 		INVOKE MulNum,value,1000	;multiply by 1000
 		call writedec
 		call crlf
@@ -933,7 +880,7 @@ MassConvertor PROC
 	ret
 
 	KtoP:
-		mWriteln "Kilograms to Pounds:"
+		mWriteln "| Kilograms to Pounds:"
 		fld ConstKtoP
 		fimul value		;mul value by 2.20462
 		call writefloat
@@ -942,7 +889,7 @@ MassConvertor PROC
 	ret
 
 	PtoK:
-		mWriteln "Pounds to Kilograms:"
+		mWriteln "| Pounds to Kilograms:"
 		fld ConstPtoK
 		fimul value		;mul value by 0.453592
 		call writefloat
@@ -951,7 +898,7 @@ MassConvertor PROC
 	ret
 
 	OtoP:
-		mWriteln "Ounces to Pounds:"
+		mWriteln "| Ounces to Pounds:"
 		fld ConstOtoP
 		fimul value		;mul value by 0.0625
 		call writefloat
@@ -960,7 +907,7 @@ MassConvertor PROC
 	ret
 
 	PtoO:
-		mWriteln "Pounds to Ounces:"
+		mWriteln "| Pounds to Ounces:"
 		INVOKE MulNum,value,16	;multiply by 16
 		call writedec
 		call crlf
@@ -968,7 +915,7 @@ MassConvertor PROC
 	ret
 
 	defaultconv:
-		mWriteln "Invalid Input!"
+		mWriteln "| Invalid Input!"
 		call waitmsg
 	ret
 MassConvertor ENDP
@@ -983,33 +930,25 @@ TemperatureConvertor PROC
 	LOCAL value:SDWORD		;since temp can be negative and positive
 
 	call clrscr
-	mov dx,010Fh
-	call GotoXY
-	mWriteln "Choose An Option:"
-
-	mov dx,030Fh
-	call GotoXY
-	mWriteln "1. Celsius to Fahrenheit"
 	
-	mov dx,040Fh
-	call GotoXY
-	mWriteln "2. Fahrenheit to Celsius"
+	mWriteln "| Choose An Option:"
+
 	
-	mov dx,050Fh
-	call GotoXY
-	mWriteln "3. Celsius to Kelvin"
+	mWriteln "| 1. Celsius to Fahrenheit"
+	
 
-	mov dx,060Fh
-	call GotoXY
-	mWriteln "4. Kelvin to Celsius"
+	mWriteln "| 2. Fahrenheit to Celsius"
+	
+	mWriteln "| 3. Celsius to Kelvin"
 
-	mov dx,070Fh
-	call GotoXY
-	mWriteln "5. Fahrenheit to Kelvin"
+	
+	mWriteln "| 4. Kelvin to Celsius"
 
-	mov dx,080Fh
-	call GotoXY
-	mWriteln "6. Kelvin to Fahrenheit"
+
+	mWriteln "| 5. Fahrenheit to Kelvin"
+
+
+	mWriteln "| 6. Kelvin to Fahrenheit"
 
 	mov dx,090Fh
 	call GotoXY
@@ -1023,7 +962,7 @@ TemperatureConvertor PROC
 
 	push eax		;store option
 	call ClrScr
-	mWriteln "Enter an Integer Value:"
+	mWriteln "| Enter an Integer Value:"
 	call readint
 	mov value,eax
 	pop eax
@@ -1043,7 +982,7 @@ TemperatureConvertor PROC
 	jmp defaultconv
 	
 	CtoF:
-		mWriteln "Celsius to Fahrenheit:"
+		mWriteln "| Celsius to Fahrenheit:"
 		fild value
 		fmul ConstCtoF		;mul value by 9/5
 		fadd Const32		;add 32
@@ -1053,7 +992,7 @@ TemperatureConvertor PROC
 	ret
 
 	FtoC:
-		mWriteln "Fahrenheit to Celsius:"
+		mWriteln "| Fahrenheit to Celsius:"
 		fild value
 		fsub Const32		;minus 32
 		fmul ConstFtoC		;mul value by 5/9
@@ -1063,7 +1002,7 @@ TemperatureConvertor PROC
 	ret
 
 	CtoK:
-		mWriteln "Celsius to Kelvin:"
+		mWriteln "| Celsius to Kelvin:"
 		fild value
 		fadd Const273
 		call writefloat
@@ -1072,7 +1011,7 @@ TemperatureConvertor PROC
 	ret
 
 	KtoC:
-		mWriteln "Kelvin to Celsius:"
+		mWriteln "| Kelvin to Celsius:"
 		fild value
 		fsub Const273
 		call writefloat
@@ -1081,7 +1020,7 @@ TemperatureConvertor PROC
 	ret
 
 	FtoK:
-		mWriteln "Fahrenheit to Kelvin:"
+		mWriteln "| Fahrenheit to Kelvin:"
 		fild value
 		fsub const32
 		fmul constftoc
@@ -1092,7 +1031,7 @@ TemperatureConvertor PROC
 	ret
 
 	KtoF:
-		mWriteln "Kelvin to Fahrenheit:"
+		mWriteln "| Kelvin to Fahrenheit:"
 		fild value
 		fsub const273
 		fmul constctof
@@ -1103,7 +1042,7 @@ TemperatureConvertor PROC
 	ret
 
 	defaultconv:
-		mWriteln "Invalid Input!"
+		mWriteln "| Invalid Input!"
 		call waitmsg
 	ret
 TemperatureConvertor ENDP
@@ -1127,7 +1066,7 @@ QuadraticCalc PROC
 	
 	FCOMI st(0),st(1)	;Compare A with 0
 	jne AisNot0
-	mWriteLn "ERROR: 'A' can't be 0 in a quadratic equation!"
+	mWriteLn "| ERROR: 'A' can't be 0 in a quadratic equation!"
 	jmp stop
 
 AisNot0:
@@ -1158,10 +1097,10 @@ AisNot0:
 			
 			;==Calculating roots==
 Noroot:
-	mWriteLn "No Real Roots!"
+	mWriteLn "| No Real Roots!"
 	jmp stop
 Oneroot:					;-B/2A
-	mWriteLn "One Real Root!"
+	mWriteLn "| One Real Root!"
 	FLD varB
 	FCHS					;-B
 	FLD varA
@@ -1171,7 +1110,7 @@ Oneroot:					;-B/2A
 	call writefloat
 	jmp stop
 Tworoots:
-	mWriteLn "Two Distinct Real Roots!"
+	mWriteLn "| Two Distinct Real Roots!"
 	FLD Discrim
 	FSQRT
 	FLD st(0)
