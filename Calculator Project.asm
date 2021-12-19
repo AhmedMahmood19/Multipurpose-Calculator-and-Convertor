@@ -174,11 +174,11 @@ l1:
 	;------------
 	;code to cmp gradepoint entered is valid or not
 
-	fcom  invalidCheck   ;compare ST(0) with the value of the real8_var variable
-	fstsw ax          ;copy the Status Word containing the result to AX
-	fwait             ;insure the previous instruction is completed
+	fcom  invalidCheck  
+	fstsw ax          
+	fwait             
 	sahf 
-	jl invalidGradePoint
+	jle invalidGradePoint
 	;-----------
 	pop eax
 	fld gradepoint
@@ -201,12 +201,18 @@ l1:
 
 invalidCourses:
 	mwrite "| Invalid Number Of Courses"
+	call crlf
+	call waitmsg
 	ret
 invalidCreditHrs:
 	mwrite "| Invalid credit hours"
-		ret
+	call crlf
+	call waitmsg
+	ret
 invalidGradePoint:
 	mwrite "| Invalid grade point entered"
+	call crlf
+	call waitmsg
 	ret
 GPACalc ENDP
 
