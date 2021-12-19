@@ -168,7 +168,7 @@ l1:
 	
 	mWrite "| Enter the grade you got in this course "
 	call readfloat
-	fstp gradepoint
+	fst gradepoint
 	push eax
 
 	;------------
@@ -178,7 +178,8 @@ l1:
 	fstsw ax          
 	fwait             
 	sahf 
-	jle invalidGradePoint
+	fstp gradepoint
+	jbe invalidGradePoint
 	;-----------
 	pop eax
 	fld gradepoint
