@@ -59,38 +59,29 @@ MainMenu PROC
 ;	Returns: NONE
 ;-----------------------------------------------------------------------
 							;This part is for printing the menu and options
-	;mov dx,010Fh
-	;call GotoXY
+
 	mov edx,OFFSET MenuMsg
 	call writestring
 
-	;mov dx,030Fh
-	;call GotoXY
+
 	mov edx,OFFSET Op1
 	call writestring
 	
-	;mov dx,040Fh
-	;call GotoXY
+
 	mov edx,OFFSET Op2
 	call writestring
 	
-	;mov dx,050Fh
-	;call GotoXY
+	
 	mov edx,OFFSET Op3
 	call writestring
 
-	;mov dx,060Fh
-	;call GotoXY
 	mov edx,OFFSET Op4
 	call writestring
 
-	;mov dx,070Fh
-	;call GotoXY
 	mov edx,OFFSET Op5
 	call writestring
 						;Takes the option as input and compares, then jumps to that func
-	;mov dx,080Fh
-	;call GotoXY
+	
 	call readint		
 	CMP eax,1
 	je GPA
@@ -394,8 +385,8 @@ invalid:
 	pop eax
 	call writeint
 
-	mov dx,050Fh
-	call GotoXY
+	
+
 	pop edx
 	mov eax,edx
 	mWrite "| Remainder = "
@@ -627,20 +618,15 @@ LengthConvertor PROC
 	
 	mWriteln "| 3. Inches to Feet"
 
-	mov dx,060Fh
-	call GotoXY
+
 	mWriteln "| 4. Feet to Inches"
 
-	mov dx,070Fh
-	call GotoXY
 	mWriteln "| 5. Meters to Feet"
 
-	mov dx,080Fh
-	call GotoXY
+	
 	mWriteln "| 6. Feet to Meters"
 
-	mov dx,090Fh
-	call GotoXY
+	
 	call readint
 
 					;check if options is between 1 && 6
@@ -738,36 +724,25 @@ MassConvertor PROC
 	LOCAL value:DWORD
 
 	call clrscr
-	mov dx,010Fh
-	call GotoXY
+
 	mWriteln "| Choose An Option:"
 
-	mov dx,030Fh
-	call GotoXY
+	
 	mWriteln "| 1. Grams to Kilograms"
 	
-	mov dx,040Fh
-	call GotoXY
 	mWriteln "| 2. Kilograms to Grams"
 	
-	mov dx,050Fh
-	call GotoXY
+	
 	mWriteln "| 3. Kilograms to Pounds"
 
-	mov dx,060Fh
-	call GotoXY
+	
 	mWriteln "| 4. Pounds to Kilograms"
 
-	mov dx,070Fh
-	call GotoXY
 	mWriteln "| 5. Ounces to Pounds"
 
-	mov dx,080Fh
-	call GotoXY
+
 	mWriteln "| 6. Pounds to Ounces"
 
-	mov dx,090Fh
-	call GotoXY
 	call readint
 
 					;check if options is between 1 && 6
@@ -885,8 +860,7 @@ TemperatureConvertor PROC
 
 	mWriteln "| 6. Kelvin to Fahrenheit"
 
-	mov dx,090Fh
-	call GotoXY
+	
 	call readint
 
 					;check if options is between 1 && 6
