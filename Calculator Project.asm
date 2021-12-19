@@ -277,7 +277,8 @@ LOCAL num1:sdword,num2:sdword
 	CMP eax,4
 	je Division
 invalid:
-	mWrite "| Invalid Option"
+	mWriteLn "| Invalid Option"
+	call waitmsg
 	ret
 
 	;--------------Addition---------------
@@ -975,7 +976,7 @@ QuadraticCalc PROC
 	
 	FCOMI st(0),st(1)	;Compare A with 0
 	jne AisNot0
-	mWriteLn "| ERROR: 'A' can't be 0 in a quadratic equation!"
+	mWriteLn "| ERROR: A is incorrect!  Tip: 'A' can't be 0 in a quadratic equation!"
 	jmp stop
 
 AisNot0:
