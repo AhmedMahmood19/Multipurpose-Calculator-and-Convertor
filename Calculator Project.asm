@@ -204,6 +204,8 @@ l1:
 	call crlf
 	mWrite "| Your SGPA is "
 	call writefloat
+	call crlf
+	call waitmsg
 	ret
 
 invalidCourses:
@@ -253,9 +255,11 @@ LOCAL num1:sdword,num2:sdword
 	mWriteln "| 4.Division"	
 
 	
-	call readint	
+	call readint
+	cmp eax,1
+	JL invalid
 	cmp eax,4
-	JA invalid
+	JG invalid
 	push eax		;storing user's choice as we have to use eax to store numbers
 
 					;input numbers
@@ -309,6 +313,8 @@ invalid:
 	mWrite "| A + B = " 
 	pop eax
 	call writeint
+	call crlf
+	call waitmsg
 	ret
 
 	;------------Subtraction------------
@@ -332,6 +338,8 @@ invalid:
 	mWrite "| A - B = "
 	pop eax
 	call writeint
+	call crlf
+	call waitmsg
 	ret
 
 	;----------Multiplication------------
@@ -357,6 +365,8 @@ invalid:
 	mWrite "| A * B = "
 	pop eax
 	call writeint
+	call crlf
+	call waitmsg
 	ret
 
 	;-----------Division--------------
@@ -371,6 +381,7 @@ invalid:
 	mWrite "| First Number= "
 	mov eax,num1
 	call writeint
+
 	call crlf
 
 	
@@ -389,6 +400,8 @@ invalid:
 	mov eax,edx
 	mWrite "| Remainder = "
 	call writeint
+	call crlf
+	call waitmsg
 							
 	ret
 BasicCalc ENDP
@@ -405,27 +418,7 @@ AddNum PROC,
 
 							;Display the result at the end
 	
-	COMMENT @
-	call clrscr
-	mov dx,010Fh
-	call GotoXY
-	mWrite "| --- Addition --- |"
-
 	
-	mWrite "| First Number = "
-	mov eax,val1
-	call writeint
-	call crlf
-
-	
-	mWrite "| Second Number = "
-	mov eax,val2
-	call writeint
-	call crlf
-
-	
-	mWrite "| A + B = " 
-	@
 						;calculation
 	mov eax,val1
 	add eax,val2
@@ -447,26 +440,7 @@ SubNum PROC,
 							;Apply the formula on the inputs
 
 							;Display the result at the end
-	COMMENT @
-	call clrscr
-	mov dx,010Fh
-	call GotoXY
-	mWrite "| --- Subtraction --- |"
 	
-	mWrite "| First Number= "
-	mov eax,val1
-	call writeint
-	call crlf
-
-	
-	mWrite "| Second Number = "
-	mov eax,val2
-	call writeint
-	call crlf
-
-
-	mWrite "| A - B = "
-	@
 						;calculation
 	mov eax,val1
 	sub eax,val2
@@ -487,25 +461,7 @@ DivNum PROC,
 							;Apply the formula on the inputs
 
 							;Display the result at the end
-	COMMENT @
-	call clrscr
 	
-	mWrite "| --- Division --- |"
-	
-	mWrite "| First Number= "
-	mov eax,val1
-	call writeint
-	call crlf
-
-
-	mWrite "| Second Number = "
-	mov eax,val2
-	call writeint
-	call crlf
-
-
-	mWrite "| A / B = "
-	@
 						;calculation from here onwards
 	mov eax,val1
 	cdq
@@ -536,28 +492,7 @@ MulNum PROC,
 							;Apply the formula on the inputs
 
 							;Display the result at the end
-	COMMENT @
-	call clrscr			
-					;msgs displayed
-	mov dx,010Fh
-	call GotoXY
-	mWrite "| --- Multiplication --- |"
-	
-	mWrite "| First Number= "
-	mov eax,val1
-	call writeint
-	call crlf
-
-	
-	mWrite "| Second Number = "
-	mov eax,val2
-	call writeint
-	call crlf
-
-	mov dx,040Fh
-	call GotoXY
-	mWrite "| A * B = "
-	@			
+		
 				;actual calculation from here onwards
 
 	mov ax, sword ptr val1
